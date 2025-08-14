@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIGEI - Sistema de Gestão de Eventos</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo">
+    <div class="logo-text">🎉 SIGEI</div>
+  </div>
+
+  <div class="nav-item">
+    <a href="/">
+      <i>🏠</i> Dashboard
+    </a>
+  </div>
+
+  <div sec:authorize="isAnonymous()" class="nav-item">
+    <a href="/login">
+      <i>🔐</i> Login
+    </a>
+  </div>
+
+  <div sec:authorize="hasAnyRole('ADMIN')" class="nav-item">
+    <a href="/participante">
+      <i>👥</i> Participantes
+    </a>
+  </div>
+
+  <div sec:authorize="hasAnyRole('ADMIN')" class="nav-item">
+    <a href="/organizador">
+      <i>👨‍💼</i> Organizadores
+    </a>
+  </div>
+
+  <div sec:authorize="hasRole('ORGANIZADOR')" class="nav-item">
+    <a href="/evento">
+      <i>📅</i> Meus Eventos
+    </a>
+  </div>
+
+  <div sec:authorize="hasRole('PARTICIPANTE')" class="nav-item">
+    <a href="/inscricao">
+      <i>📝</i> Minhas Inscrições
+    </a>
+  </div>
+
+  <div sec:authorize="hasRole('PARTICIPANTE')" class="nav-item">
+    <a href="/notificacao">
+      <i>🔔</i> Notificações
+    </a>
+  </div>
+
+  <div sec:authorize="isAuthenticated()" class="nav-item">
+    <form method="POST" th:action="@{/logout}">
+      <button type="submit">
+        <i>🚪</i> Logout
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="main">
+  <div class="overview fade-in" layout:fragment="barra">
+    <!-- Content will be inserted here -->
+  </div>
+
+  <div class="fade-in" layout:fragment="corpo">
+    <h3>Bem-vindo ao SIGEI</h3>
+    <p>Sistema de Gestão de Eventos e Inscrições</p>
+  </div>
+</div>
+</body>
+</html>

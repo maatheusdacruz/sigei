@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${evento.nome}">Detalhes do Evento</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body style="margin: 0; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh;">
+
+<div style="max-width: 800px; margin: 0 auto;">
+  <div class="card fade-in" style="margin-bottom: 2rem;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <h1 th:text="${evento.nome}" style="color: #2d3748; margin-bottom: 0.5rem;">Nome do Evento</h1>
+      <div class="event-date" th:text="${#temporals.format(evento.date, 'dd/MM/yyyy')}" style="display: inline-block;">
+        00/00/0000
+      </div>
+    </div>
+
+    <div style="display: grid; gap: 1.5rem;">
+      <div>
+        <h3 style="color: #4a5568; margin-bottom: 0.5rem; display: flex; align-items: center;">
+          📝 Descrição
+        </h3>
+        <p th:text="${evento.descricao}" style="color: #718096; line-height: 1.6;">
+          Descrição do evento
+        </p>
+      </div>
+
+      <div>
+        <h3 style="color: #4a5568; margin-bottom: 0.5rem; display: flex; align-items: center;">
+          🏷️ Categoria
+        </h3>
+        <div class="event-category" th:text="${evento.categoria}">
+          Categoria
+        </div>
+      </div>
+
+      <div>
+        <h3 style="color: #4a5568; margin-bottom: 0.5rem; display: flex; align-items: center;">
+          📅 Data do Evento
+        </h3>
+        <p th:text="${#temporals.format(evento.date, 'EEEE, dd MMMM yyyy', T(java.util.Locale).forLanguageTag('pt-BR'))}" style="color: #718096;">
+          Data completa
+        </p>
+      </div>
+
+      <div>
+        <h3 style="color: #4a5568; margin-bottom: 0.5rem; display: flex; align-items: center;">
+          👨‍💼 Organizador
+        </h3>
+        <p th:text="${evento.organizador.nome}" style="color: #718096;">
+          Nome do organizador
+        </p>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+      <a href="/" class="btn" style="margin-right: 1rem;">
+        ← Voltar ao Início
+      </a>
+
+      <form th:action="@{/inscricao/inscrever}" method="post" style="display: inline-block; background: none; padding: 0; box-shadow: none; border: none;">
+        <input type="hidden" name="eventoId" th:value="${evento.id}" />
+        <button type="submit" class="btn btn-success"
+                th:text="${inscrito} ? 'Desinscrever-se' : 'Inscrever-se'">
+          ✅ Inscrever-se neste Evento
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

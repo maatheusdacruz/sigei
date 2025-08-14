@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{./template}">
+
+<section layout:fragment="barra">
+    <fieldset>
+        <legend>🔍 Pesquisar Eventos</legend>
+        <form action="/evento" method="get" style="display: flex; gap: 1rem; align-items: end; background: none; padding: 0; box-shadow: none; border: none;">
+            <div style="flex: 1;">
+                <label for="cpPesq">Nome do Evento:</label>
+                <input type="text" name="cpPesq" id="cpPesq" placeholder="Digite o nome do evento..." />
+            </div>
+            <div>
+                <button type="submit" class="btn">🔍 Pesquisar</button>
+                <a href="/evento/novo" class="btn btn-success">➕ Novo Evento</a>
+            </div>
+        </form>
+    </fieldset>
+</section>
+
+<section layout:fragment="corpo">
+    <h2>📅 Meus Eventos</h2>
+
+    <div th:if="${lista.empty}" class="card text-center">
+        <h3>📝 Nenhum evento cadastrado</h3>
+        <p style="color: #718096;">Você ainda não criou nenhum evento. Que tal começar agora?</p>
+        <a href="/evento/novo" class="btn btn-success">➕ Criar Primeiro Evento</a>
+    </div>
+
+    <div th:unless="${lista.empty}">
+        <table>
+            <thead>
+            <tr>
+                <th>📝 Nome</th>
+                <th>📄 Descrição</th>
+                <th>🏷️ Categoria</th>
+                <th>📅 Data</th>
+                <th>👨‍💼 Organizador</th>
+                <th>⚙️ Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="e: ${lista}">
+                <td>
+                    <strong th:text="${e.nome}">Nome do Evento</strong>
+                </td>
+                <td th:text="${e.descricao}">Descrição do Evento</td>
+                <td>
+                    <span class="event-category" th:text="${e.categoria}">Categoria</span>
+                </td>
+                <td th:text="${#temporals.format(e.date, 'dd/MM/yyyy')}">Data</td>
+                <td th:text="${e.nomeOrganizador}">Nome do Organizador</td>
+                <td>
+                    <a th:href="${'/evento/edit/'+e.id}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                        ✏️ Editar
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</html>

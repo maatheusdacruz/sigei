@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template}">
+<head>
+    <style>
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+        }
+
+        .card p {
+            margin: 5px 0;
+        }
+
+        .card .button {
+            margin-top: 10px;
+        }
+
+        .card a button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .card a button:hover {
+            background-color: #0056b3;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<section layout:fragment="barra">
+    <div class="card">
+        <h2>
+            <span sec:authorize="isAuthenticated()">
+                Olá, <span th:text="${nome}" style="color: #667eea;">Usuário</span>! 👋
+            </span>
+            <span sec:authorize="isAnonymous()">
+                Bem-vindo ao SIGEI! 🎉
+            </span>
+        </h2>
+        <p sec:authorize="hasAuthority('CAN_FILTER')" style="color: #718096;">
+            Você está na área administrativa do sistema.
+        </p>
+        <p sec:authorize="hasRole('ORGANIZADOR')" style="color: #718096;">
+            Gerencie seus eventos e acompanhe as inscrições.
+        </p>
+        <p sec:authorize="hasRole('PARTICIPANTE')" style="color: #718096;">
+            Descubra eventos incríveis e faça suas inscrições.
+        </p>
+    </div>
+</section>
+
+<section layout:fragment="corpo">
+    <h2>
+        <span sec:authorize="isAuthenticated()">
+            <span th:text="${nome}">Fulano</span>
+        </span>
+        Bem-vindo ao sistema Sigei!
+    </h2>
+    <p sec:authorize="hasAuthority('CAN_FILTER')">Você está na área inicial do sistema.</p>
+
+    <div th:if="${eventos.empty}" class="card text-center">
+        <h3>📅 Nenhum evento disponível</h3>
+        <p style="color: #718096;">Não há eventos cadastrados no momento. Volte em breve!</p>
+    </div>
+
+    <div th:unless="${eventos.empty}">
+        <h2 style="margin-bottom: 1.5rem;">🎯 Eventos Disponíveis</h2>
+
+        <div class="cards-container">
+            <div class="card event-card" th:each="e : ${eventos}">
+                <div class="event-date" th:text="${#temporals.format(e.date, 'dd/MM/yyyy')}">
+                    00/00/0000
+                </div>
+
+                <h3 th:text="${e.nome}">Nome do Evento</h3>
+
+                <div class="event-category" th:text="${e.categoria}">
+                    Categoria
+                </div>
+
+                <p th:text="${e.descricao}" style="margin-bottom: 1rem; color: #718096;">
+                    Descrição do evento
+                </p>
+
+                <p style="font-size: 0.875rem; color: #4a5568; margin-bottom: 1rem;">
+                    <strong>Organizador:</strong> <span th:text="${e.nomeOrganizador}">Nome</span>
+                </p>
+
+                <div class="button">
+                    <a th:href="@{'/card/' + ${e.id}}">
+                        <button type="button" class="btn">
+                            👁️ Ver Detalhes
+                        </button>
+                    </a>
+
+                    <div sec:authorize="hasRole('PARTICIPANTE')" style="display: inline-block;">
+                        <form th:action="@{/inscricao/inscrever}" method="post" style="display: inline-block; background: none; padding: 0; box-shadow: none; border: none;">
+                            <input type="hidden" name="eventoId" th:value="${e.id}" />
+                            <button type="submit" class="btn btn-success"
+                                    th:text="${idinscritos != null and #lists.contains(idinscritos, e.id)} ? 'Desinscrever-se' : 'Inscrever-se'">
+                                ✅ Inscrever-se
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

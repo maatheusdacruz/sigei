@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGEI - Login</title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="login-container">
+    <div class="login-form fade-in">
+        <h1>🎉 SIGEI</h1>
+        <p class="text-center mb-4" style="color: #718096;">Sistema de Gestão de Eventos e Inscrições</p>
+
+        <div th:if="${param.error}" class="error-message">
+            ❌ Login ou senha incorretos
+        </div>
+
+        <form method="POST" th:action="@{/login}">
+            <label for="username">👤 Usuário</label>
+            <input name="username" id="username" type="text" placeholder="Digite seu login" required>
+
+            <label for="password">🔒 Senha</label>
+            <input name="password" id="password" type="password" placeholder="Digite sua senha" required>
+
+            <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                Entrar
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <p style="color: #718096; font-size: 0.875rem;">
+                Não tem uma conta? Entre em contato com o administrador.
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

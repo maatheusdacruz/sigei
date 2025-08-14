@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{./template}">
+
+<section layout:fragment="barra">
+    <div class="card">
+        <h2>🔔 Central de Notificações</h2>
+        <p style="color: #718096;">Acompanhe todas as notificações do sistema</p>
+    </div>
+</section>
+
+<section layout:fragment="corpo">
+    <div th:if="${listanotificacoes.empty}" class="card text-center">
+        <h3>🔔 Nenhuma notificação</h3>
+        <p style="color: #718096;">Não há notificações no momento. Quando houver novidades, elas aparecerão aqui!</p>
+    </div>
+
+    <div th:unless="${listanotificacoes.empty}">
+        <div style="display: grid; gap: 1rem;">
+            <div class="notification-item" th:each="n: ${listanotificacoes}">
+                <div class="notification-message" th:text="${n.mensagem}">
+                    Mensagem da notificação
+                </div>
+                <div class="notification-user">
+                    👤 <span th:text="${n.nomeParticipante}">Nome do Participante</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</html>
