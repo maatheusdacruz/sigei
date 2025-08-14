@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{./template}">
+
+<section layout:fragment="barra" sec:authorize="hasAuthority('CAN_FILTER')">
+    <fieldset>
+        <legend>🔍 Pesquisar Participantes</legend>
+        <form action="/participante" method="get" style="display: flex; gap: 1rem; align-items: end; background: none; padding: 0; box-shadow: none; border: none;">
+            <div style="flex: 1;">
+                <label for="cpPesq">Nome do Participante:</label>
+                <input type="text" name="cpPesq" id="cpPesq" placeholder="Digite o nome do participante..." />
+            </div>
+            <div>
+                <button type="submit" class="btn">🔍 Pesquisar</button>
+                <a href="/participante/novo" class="btn btn-success">➕ Novo Participante</a>
+            </div>
+        </form>
+    </fieldset>
+</section>
+
+<section layout:fragment="corpo">
+    <h2>👥 Gerenciar Participantes</h2>
+
+    <div th:if="${lista.empty}" class="card text-center">
+        <h3>👥 Nenhum participante cadastrado</h3>
+        <p style="color: #718096;">Não há participantes cadastrados no sistema.</p>
+        <a href="/participante/novo" class="btn btn-success">➕ Cadastrar Primeiro Participante</a>
+    </div>
+
+    <div th:unless="${lista.empty}">
+        <table>
+            <thead>
+            <tr>
+                <th>👤 Nome</th>
+                <th>📧 Email</th>
+                <th>⚙️ Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c: ${lista}">
+                <td>
+                    <strong th:text="${c.nome}">Nome do Participante</strong>
+                </td>
+                <td th:text="${c.email}">email@exemplo.com</td>
+                <td>
+                    <a th:href="${'/participante/edit/'+c.id}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                        ✏️ Editar
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</html>

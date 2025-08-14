@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template}">
+
+<section layout:fragment="barra">
+    <div class="calendar-filter">
+        <div>
+            <h2 style="margin: 0;">📅 Minha Agenda de Eventos</h2>
+            <p style="color: #718096; margin: 0;">Visualize seus eventos em formato de calendário</p>
+        </div>
+    </div>
+</section>
+
+<section layout:fragment="corpo">
+    <div class="calendar-filter">
+        <form method="get" th:action="@{/inscricao/agenda}" style="display: flex; gap: 1rem; align-items: end; background: none; padding: 0; box-shadow: none; border: none;">
+            <div>
+                <label for="mes">📅 Mês:</label>
+                <select name="mes" id="mes">
+                    <option th:each="mesNome, iStat : ${meses}"
+                            th:value="${iStat.index + 1}"
+                            th:text="${mesNome}"
+                            th:selected="${(iStat.index + 1) == mes}">
+                    </option>
+                </select>
+            </div>
+
+            <div>
+                <label for="ano">📆 Ano:</label>
+                <select name="ano" id="ano">
+                    <option th:each="i : ${#numbers.sequence(2020, 2030)}"
+                            th:value="${i}"
+                            th:text="${i}"
+                            th:selected="${i == ano}">2025</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn">🔍 Filtrar</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3 th:text="'📅 ' + ${meses[mes-1]} + ' de ' + ${ano}" style="text-align: center; margin-bottom: 1.5rem;"></h3>
+
+        <table class="calendar">
+            <thead>
+            <tr>
+                <th>Dom</th>
+                <th>Seg</th>
+                <th>Ter</th>
+                <th>Qua</th>
+                <th>Qui</th>
+                <th>Sex</th>
+                <th>Sáb</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="semana : ${calendario}">
+                <td th:each="dia : ${semana}">
+                    <div th:if="${dia.dia != 0}">
+                        <div class="day-number" th:text="${dia.dia}"></div>
+                        <div th:each="evento : ${dia.eventos}" class="event" th:text="${evento.nome}"></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="/inscricao" class="btn">📝 Ver Lista de Inscrições</a>
+        <a href="/" class="btn btn-secondary">🏠 Voltar ao Início</a>
+    </div>
+</section>
+</html>

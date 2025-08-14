@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{./template}" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<section layout:fragment="barra">
+    <div class="card">
+        <h1 th:if="${evento.id == 0}">➕ Cadastrar Novo Evento</h1>
+        <h1 th:if="${evento.id > 0}">✏️ Editar Evento</h1>
+        <p style="color: #718096;">Preencha as informações do evento abaixo</p>
+    </div>
+</section>
+
+<section layout:fragment="corpo">
+    <form th:object="${evento}" method="POST" th:action="@{/evento}">
+        <input type="hidden" th:field="*{id}" />
+
+        <div style="display: grid; gap: 1rem;">
+            <div>
+                <label for="nome">📝 Nome do Evento *</label>
+                <input type="text" id="nome" required th:field="*{nome}" placeholder="Ex: Workshop de Tecnologia" />
+            </div>
+
+            <div>
+                <label for="descricao">📄 Descrição *</label>
+                <textarea id="descricao" required th:field="*{descricao}" rows="4"
+                          placeholder="Descreva os detalhes do evento, objetivos e o que os participantes podem esperar..."></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label for="categoria">🏷️ Categoria *</label>
+                    <select id="categoria" required th:field="*{categoria}">
+                        <option value="">Selecione uma categoria</option>
+                        <option value="Tecnologia">💻 Tecnologia</option>
+                        <option value="Educação">📚 Educação</option>
+                        <option value="Saúde">🏥 Saúde</option>
+                        <option value="Esportes">⚽ Esportes</option>
+                        <option value="Arte e Cultura">🎨 Arte e Cultura</option>
+                        <option value="Negócios">💼 Negócios</option>
+                        <option value="Entretenimento">🎭 Entretenimento</option>
+                        <option value="Outros">📋 Outros</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="date">📅 Data do Evento *</label>
+                    <input type="date" id="date" required th:field="*{date}" />
+                </div>
+
+                <div sec:authorize="hasRole('ADMIN')">
+                    <label for="organizador">👤 Organizador Responsável</label>
+                    <select id="organizador" name="idOrganizador">
+                        <option value="">Selecione um organizador</option>
+                        <option th:each="org : ${organizadores}" th:value="${org.id}" th:text="${org.nome}"></option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; text-align: center;">
+            <button type="submit" class="btn btn-success">
+                <span th:if="${evento.id == 0}">➕ Criar Evento</span>
+                <span th:if="${evento.id > 0}">💾 Salvar Alterações</span>
+            </button>
+            <a href="/evento" class="btn btn-secondary">❌ Cancelar</a>
+        </div>
+    </form>
+</section>
+</html>

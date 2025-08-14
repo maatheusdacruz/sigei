@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{./template}">
+
+<section layout:fragment="barra">
+    <div class="card">
+        <h2>📝 Minhas Inscrições</h2>
+        <p style="color: #718096;">Eventos nos quais você está inscrito</p>
+        <a href="/inscricao/agenda" class="btn">📅 Ver Agenda</a>
+    </div>
+</section>
+
+<section layout:fragment="corpo">
+    <div th:if="${listainscricoes.empty}" class="card text-center">
+        <h3>📝 Nenhuma inscrição encontrada</h3>
+        <p style="color: #718096;">Você ainda não se inscreveu em nenhum evento. Explore os eventos disponíveis!</p>
+        <a href="/" class="btn btn-success">🎯 Ver Eventos Disponíveis</a>
+    </div>
+
+    <div th:unless="${listainscricoes.empty}">
+        <table>
+            <thead>
+            <tr>
+                <th>📝 Nome</th>
+                <th>📄 Descrição</th>
+                <th>🏷️ Categoria</th>
+                <th>📅 Data</th>
+                <th>👨‍💼 Organizador</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="e: ${listainscricoes}">
+                <td>
+                    <strong th:text="${e.nome}">Nome do Evento</strong>
+                </td>
+                <td th:text="${e.descricao}">Descrição do Evento</td>
+                <td>
+                    <span class="event-category" th:text="${e.categoria}">Categoria</span>
+                </td>
+                <td th:text="${#temporals.format(e.date, 'dd/MM/yyyy')}">Data</td>
+                <td th:text="${e.nomeOrganizador}">Nome do Organizador</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="/inscricao/agenda" class="btn">📅 Ver em Formato de Agenda</a>
+        </div>
+    </div>
+</section>
+</html>

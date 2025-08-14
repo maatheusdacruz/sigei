@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{./template}">
+
+<section layout:fragment="barra" sec:authorize="hasAuthority('CAN_FILTER')">
+    <fieldset>
+        <legend>🔍 Pesquisar Organizadores</legend>
+        <form action="/organizador" method="get" style="display: flex; gap: 1rem; align-items: end; background: none; padding: 0; box-shadow: none; border: none;">
+            <div style="flex: 1;">
+                <label for="cpPesq">Nome do Organizador:</label>
+                <input type="text" name="cpPesq" id="cpPesq" placeholder="Digite o nome do organizador..." />
+            </div>
+            <div>
+                <button type="submit" class="btn">🔍 Pesquisar</button>
+                <a href="/organizador/novo" class="btn btn-success">➕ Novo Organizador</a>
+            </div>
+        </form>
+    </fieldset>
+</section>
+
+<section layout:fragment="corpo">
+    <h2>👨‍💼 Gerenciar Organizadores</h2>
+
+    <div th:if="${lista.empty}" class="card text-center">
+        <h3>👨‍💼 Nenhum organizador cadastrado</h3>
+        <p style="color: #718096;">Não há organizadores cadastrados no sistema.</p>
+        <a href="/organizador/novo" class="btn btn-success">➕ Cadastrar Primeiro Organizador</a>
+    </div>
+
+    <div th:unless="${lista.empty}">
+        <table>
+            <thead>
+            <tr>
+                <th>👤 Nome</th>
+                <th>📧 Email</th>
+                <th>⚙️ Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="o: ${lista}">
+                <td>
+                    <strong th:text="${o.nome}">Nome do Organizador</strong>
+                </td>
+                <td th:text="${o.email}">email@exemplo.com</td>
+                <td>
+                    <a th:href="${'/organizador/edit/'+o.id}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                        ✏️ Editar
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</html>
